@@ -1,0 +1,76 @@
+* {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	outline: none;
+	font-family: "Roboto", -apple-system, system-ui, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.todo {
+	display: flex;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: calc(100vw - 60px);
+	height: calc(100vh - 140px);
+	transform: translate(-50%, -50%);
+	box-shadow: 1px 2px 20px #f3f3f3;
+	border-radius: 10px;
+	border: 1px solid #f1f1f1;
+	font-size: 14px;
+
+	&__sidebar {
+		background-color: #e5e5e5;
+		width: 200px;
+		height: calc(100% - 120px);
+		padding: 60px 20px;
+	}
+
+	&__tasks {
+		flex: 1;
+		padding: 60px;
+		overflow: auto;
+	}
+}
+
+.list {
+	margin-bottom: 30px;
+	$self: &;
+
+	li {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		margin-bottom: 5px;
+		padding: 10px 12px;
+	}
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.5);
+	}
+
+	.active {
+		background-color: #ffffff;
+		box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.04);
+	}
+
+	span {
+		flex: 1;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		width: 160px;
+		white-space: nowrap;
+	}
+
+	i {
+		display: inline-flex;
+		margin-right: 8px;
+		svg {
+			path {
+				fill: #7c7c7c;
+			}
+		}
+	}
+}

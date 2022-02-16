@@ -8,10 +8,9 @@
 		cursor: pointer;
 		margin-bottom: 5px;
 		padding: 10px 12px;
-	}
-
-	&:hover {
-		background: rgba(255, 255, 255, 0.5);
+		&:hover {
+			background: rgba(255, 255, 255, 0.5);
+		}
 	}
 
 	.active {
@@ -36,4 +35,11 @@
 			}
 		}
 	}
+}
+
+.badge {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 30px;
 }

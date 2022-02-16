@@ -1,15 +1,26 @@
-import React from "react";
-import classNames from "classnames";
+import React from 'react';
+import classNames from 'classnames';
+import closeSvg from '../../img/close.svg';
 
-import "./List.scss";
+import './List.scss';
 
-const List = (props) => {
-	console.log(props);
+const List = ({ items, colors }) => {
+	console.log(items, colors);
 	return (
 		<ul className="list">
-			{props.items.map((item) => (
-				<li key={item.id}>
-					<i></i>
+			{items.map((item, index) => (
+				<li key={index}>
+					{item.icon ? (
+						item.icon
+					) : (
+						<i
+							className="badge"
+							style={{
+								background: colors.find((color) => color.id === item.colorId)
+									.hex,
+							}}
+						></i>
+					)}
 					<span>{item.name}</span>
 				</li>
 			))}

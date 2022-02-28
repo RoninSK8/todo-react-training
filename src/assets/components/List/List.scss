@@ -29,17 +29,18 @@
 	i {
 		display: inline-flex;
 		margin-right: 8px;
-		svg {
-			path {
-				fill: #7c7c7c;
-			}
+	}
+	svg {
+		path {
+			fill: #7c7c7c;
 		}
 	}
 }
 
 .badge {
+	margin-right: 8px;
 	display: inline-block;
-	width: 10px;
-	height: 10px;
+	width: 15px;
+	height: 15px;
 	border-radius: 30px;
 }

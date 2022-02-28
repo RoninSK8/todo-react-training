@@ -2,50 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { getDatabase, ref, child, get } from 'firebase/database';
 
 import List from './assets/components/List';
+import AddList from './assets/components/AddList';
 
 function App() {
 	const [lists, setLists] = useState(null);
 	const [colors, setColors] = useState(null);
+	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
 		const dbRef = ref(getDatabase());
 		const getData = async () => {
+			setLoading(true);
 			const listsResponse = await get(child(dbRef, 'lists'));
 			const colorsResponse = await get(child(dbRef, 'colors'));
+			console.log(listsResponse.val());
 			setColors(colorsResponse.val());
 			setLists(listsResponse.val());
+			setLoading(false);
 		};
 
 		getData();
-
-		// get(child(dbRef, 'colors'))
-		// 	.then((snapshot) => {
-		// 		if (snapshot.exists()) {
-		// 			setColors(snapshot.val());
-		// 		} else {
-		// 			console.log('No data available');
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error(error);
-		// 	});
-		// get(child(dbRef, 'lists'))
-		// 	.then((snapshot) => {
-		// 		if (snapshot.exists()) {
-		// 			setLists(snapshot.val());
-		// 		} else {
-		// 			console.log('No data available');
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.error(error);
-		// 	});
 	}, []);
 
-	// const ColorsProvider = (props) => {
-	// 	const { children } = props;
-	// 	return <ColorContext.Provider></ColorContext.Provider>;
-	// };
+	const onAddList = (newList) => {
+		let updatedLists;
+		lists ? (updatedLists = [...lists, newList]) : (updatedLists = [newList]);
+		setLists(updatedLists);
+	};
+
+	const onRemoveList = (removedList) => {
+		const updatedLists = lists.filter((list) => list.id !== removedList.id);
+		setLists(updatedLists);
+	};
 
 	return (
 		<div className="todo">
@@ -71,7 +59,29 @@ function App() {
 						},
 					]}
 				/>
-				{lists ? <List items={lists} colors={colors} /> : 'Загрузка...'}
+				{/* {lists ? (
+					<List
+						items={lists}
+						colors={colors}
+						onRemove={onRemoveList}
+						isRemovable
+					/>
+				) : (
+					'Загрузка...'
+				)} */}
+				{isLoading ? (
+					'Загрузка...'
+				) : lists ? (
+					<List
+						items={lists}
+						colors={colors}
+						onRemove={onRemoveList}
+						isRemovable
+					/>
+				) : (
+					'список пуст...'
+				)}
+				<AddList colors={colors} lists={lists} onAdd={onAddList} />
 			</div>
 			<div className="tasks">Tasks</div>
 		</div>

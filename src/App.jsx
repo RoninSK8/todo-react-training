@@ -3,6 +3,7 @@ import { getDatabase, ref, child, get } from 'firebase/database';
 
 import List from './assets/components/List';
 import AddList from './assets/components/AddList';
+import Tasks from './assets/components/Tasks';
 
 function App() {
 	const [lists, setLists] = useState(null);
@@ -83,7 +84,7 @@ function App() {
 				)}
 				<AddList colors={colors} lists={lists} onAdd={onAddList} />
 			</div>
-			<div className="tasks">Tasks</div>
+			<Tasks />
 		</div>
 	);
 }

@@ -38,11 +38,6 @@ const AddList = ({ lists, colors, onAdd }) => {
 		};
 		let updatedData;
 		lists ? (updatedData = [...lists, listData]) : (updatedData = [listData]);
-		// if (lists) {
-		// 	const updatedData = [...lists, listData];
-		// } else {
-		// 	const updatedData = [listData];
-		// }
 
 		const updates = {};
 		updates['/lists/'] = updatedData;

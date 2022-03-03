@@ -5,7 +5,20 @@ import { getDatabase, ref, child, get, push, update } from 'firebase/database';
 
 import './List.scss';
 
-const List = ({ items, colors, isRemovable, onClick, onRemove }) => {
+const List = ({
+	items,
+	tasks,
+	colors,
+	isRemovable,
+	activeItem,
+	onClick,
+	onClickItem,
+	onRemove,
+}) => {
+	const tasksCount = (tasks, list) => {
+		return tasks ? tasks.filter((task) => task.listId === list.id).length : 0;
+	};
+
 	const onRemoveList = (list) => {
 		if (
 			window.confirm(
@@ -30,7 +43,13 @@ const List = ({ items, colors, isRemovable, onClick, onRemove }) => {
 	return (
 		<ul className="list" onClick={onClick}>
 			{items.map((item, index) => (
-				<li key={index}>
+				<li
+					onClick={onClickItem ? () => onClickItem(item) : null}
+					key={index}
+					className={classNames({
+						active: activeItem && activeItem.id === item.id,
+					})}
+				>
 					{item.icon ? (
 						<i>{item.icon}</i>
 					) : (
@@ -42,9 +61,14 @@ const List = ({ items, colors, isRemovable, onClick, onRemove }) => {
 							}}
 						></i>
 					)}
-					<span>{item.name}</span>
+					<span>
+						{/* {`${item.name} (${tasksCount(tasks, item)})`} */}
+						{item.name}
+					</span>
+					{tasks && <p>{`(${tasksCount(tasks, item)})`}</p>}
 					{isRemovable && (
 						<svg
+							className="list__remove-icon"
 							onClick={() => onRemoveList(item)}
 							width="11"
 							height="11"

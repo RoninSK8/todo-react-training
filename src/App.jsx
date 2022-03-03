@@ -8,6 +8,8 @@ import Tasks from './assets/components/Tasks';
 function App() {
 	const [lists, setLists] = useState(null);
 	const [colors, setColors] = useState(null);
+	const [tasks, setTasks] = useState(null);
+	const [activeItem, setActiveItem] = useState(null);
 	const [isLoading, setLoading] = useState(false);
 
 	useEffect(() => {
@@ -16,7 +18,8 @@ function App() {
 			setLoading(true);
 			const listsResponse = await get(child(dbRef, 'lists'));
 			const colorsResponse = await get(child(dbRef, 'colors'));
-			console.log(listsResponse.val());
+			const tasksResponse = await get(child(dbRef, 'tasks'));
+			setTasks(tasksResponse.val());
 			setColors(colorsResponse.val());
 			setLists(listsResponse.val());
 			setLoading(false);
@@ -34,6 +37,20 @@ function App() {
 	const onRemoveList = (removedList) => {
 		const updatedLists = lists.filter((list) => list.id !== removedList.id);
 		setLists(updatedLists);
+	};
+
+	const onEditTitle = (id, name) => {
+		const updatedLists = lists.map((list) => {
+			if (list.id === id) {
+				list.name = name;
+			}
+			return list;
+		});
+		setLists(updatedLists);
+	};
+
+	const updateLists = (lists) => {
+		setLists(lists);
 	};
 
 	return (
@@ -60,6 +77,7 @@ function App() {
 						},
 					]}
 				/>
+				{console.log(getDatabase())}
 				{/* {lists ? (
 					<List
 						items={lists}
@@ -75,8 +93,13 @@ function App() {
 				) : lists ? (
 					<List
 						items={lists}
+						tasks={tasks}
 						colors={colors}
 						onRemove={onRemoveList}
+						onClickItem={(item) => {
+							setActiveItem(item);
+						}}
+						activeItem={activeItem}
 						isRemovable
 					/>
 				) : (
@@ -84,7 +107,14 @@ function App() {
 				)}
 				<AddList colors={colors} lists={lists} onAdd={onAddList} />
 			</div>
-			<Tasks />
+			{lists && activeItem && (
+				<Tasks
+					list={activeItem}
+					lists={lists}
+					tasks={tasks}
+					onEditTitle={onEditTitle}
+				/>
+			)}
 		</div>
 	);
 }

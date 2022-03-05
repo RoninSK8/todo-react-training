@@ -34,6 +34,17 @@ function App() {
 		setLists(updatedLists);
 	};
 
+	const onAddTask = (newTask) => {
+		let updatedTasks;
+		tasks ? (updatedTasks = [...tasks, newTask]) : (updatedTasks = [newTask]);
+		setTasks(updatedTasks);
+	};
+
+	const onRemoveTask = (removedTask) => {
+		const updatedTasks = tasks.filter((task) => task.id !== removedTask.id);
+		setTasks(updatedTasks);
+	};
+
 	const onRemoveList = (removedList) => {
 		const updatedLists = lists.filter((list) => list.id !== removedList.id);
 		setLists(updatedLists);
@@ -49,9 +60,9 @@ function App() {
 		setLists(updatedLists);
 	};
 
-	const updateLists = (lists) => {
-		setLists(lists);
-	};
+	// const updateLists = (lists) => {
+	// 	setLists(lists);
+	// };
 
 	return (
 		<div className="todo">
@@ -77,17 +88,6 @@ function App() {
 						},
 					]}
 				/>
-				{console.log(getDatabase())}
-				{/* {lists ? (
-					<List
-						items={lists}
-						colors={colors}
-						onRemove={onRemoveList}
-						isRemovable
-					/>
-				) : (
-					'Загрузка...'
-				)} */}
 				{isLoading ? (
 					'Загрузка...'
 				) : lists ? (
@@ -113,6 +113,7 @@ function App() {
 					lists={lists}
 					tasks={tasks}
 					onEditTitle={onEditTitle}
+					onAdd={onAddTask}
 				/>
 			)}
 		</div>

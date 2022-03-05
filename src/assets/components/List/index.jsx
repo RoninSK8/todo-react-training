@@ -18,7 +18,16 @@ const List = ({
 	const tasksCount = (tasks, list) => {
 		return tasks ? tasks.filter((task) => task.listId === list.id).length : 0;
 	};
-
+	const removeAssociatedTasks = (list, tasks) => {
+		const db = getDatabase();
+		let updatedData = tasks.filter((task) => task.listId !== list.id);
+		if (updatedData.length === 0) {
+			updatedData = [{}];
+		}
+		const updates = {};
+		updates['/tasks/'] = updatedData;
+		update(ref(db), updates);
+	};
 	const onRemoveList = (list) => {
 		if (
 			window.confirm(
@@ -33,9 +42,9 @@ const List = ({
 			}
 			const updates = {};
 			updates['/lists/'] = updatedData;
-			console.log(updates);
 			update(ref(db), updates)
 				.then(() => onRemove(list))
+				.then(() => removeAssociatedTasks(list, tasks))
 				.catch((e) => console.log(e));
 		}
 	};

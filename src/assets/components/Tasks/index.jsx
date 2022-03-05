@@ -3,9 +3,9 @@ import { getDatabase, ref, child, get, push, update } from 'firebase/database';
 import './Tasks.scss';
 import List from '../List';
 import editSvg from '../../img/edit.svg';
-import AddTask from './AddTask';
+import AddTask from '../AddTask';
 
-const Tasks = ({ list, lists, tasks, onEditTitle }) => {
+const Tasks = ({ list, lists, tasks, onEditTitle, onAdd }) => {
 	const currentTasks = tasks
 		? tasks.filter((task) => task.listId === list.id)
 		: [];
@@ -64,39 +64,7 @@ const Tasks = ({ list, lists, tasks, onEditTitle }) => {
 					</div>
 				))}
 			</div>
-			<div className="tasks__add">
-				<AddTask
-					items={[
-						{
-							icon: (
-								<svg
-									width="16"
-									height="16"
-									viewBox="0 0 16 16"
-									fill="none"
-									xmlns="http://www.w3.org/2000/svg"
-								>
-									<path
-										d="M8 1V15"
-										stroke="#7c7c7c"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									/>
-									<path
-										d="M1 8H15"
-										stroke="#7c7c7c"
-										strokeWidth="2"
-										strokeLinecap="round"
-										strokeLinejoin="round"
-									/>
-								</svg>
-							),
-							name: 'Добавить задачу',
-						},
-					]}
-				/>
-			</div>
+			<AddTask onAdd={onAdd} list={list} tasks={tasks} />
 		</div>
 	);
 };

@@ -1,0 +1,28 @@
+.add-task {
+	margin-top: 20px;
+	&__button {
+		// color: #b4b4b4;
+		cursor: pointer;
+		opacity: 0.4;
+		transition: opacity 0.15s ease-in-out;
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	&__input {
+		margin-bottom: 16px;
+	}
+
+	&__confirm-button {
+		margin-right: 10px;
+	}
+
+	&__cancel-button {
+		background-color: #f4f6f8;
+		color: #9c9c9c;
+		&:hover {
+			background-color: darken(#f4f6f8, 4%);
+		}
+	}
+}

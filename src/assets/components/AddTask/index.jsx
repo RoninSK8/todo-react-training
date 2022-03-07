@@ -11,7 +11,6 @@ const AddTask = ({ list, tasks, onAdd }) => {
 
 	const toggleFormActive = () => {
 		setFormActive(!isFormActive);
-		console.log(isFormActive);
 		setInputValue('');
 	};
 

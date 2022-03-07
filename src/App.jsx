@@ -22,7 +22,11 @@ function App() {
 			setTasks(tasksResponse.val());
 			setColors(colorsResponse.val());
 			setLists(listsResponse.val());
+			console.log(lists);
+			// lists ? setActiveItem(lists[0]) : null;
+			// setActiveItem(lists[0]);
 			setLoading(false);
+			setActiveItem(listsResponse.val()[0]);
 		};
 
 		getData();
@@ -32,6 +36,7 @@ function App() {
 		let updatedLists;
 		lists ? (updatedLists = [...lists, newList]) : (updatedLists = [newList]);
 		setLists(updatedLists);
+		setActiveItem(updatedLists[updatedLists.length - 1]);
 	};
 
 	const onAddTask = (newTask) => {
@@ -48,6 +53,9 @@ function App() {
 	const onRemoveList = (removedList) => {
 		const updatedLists = lists.filter((list) => list.id !== removedList.id);
 		setLists(updatedLists);
+		if (lists) {
+			setActiveItem(updatedLists[0]);
+		}
 	};
 
 	const onEditTitle = (id, name) => {
@@ -58,6 +66,15 @@ function App() {
 			return list;
 		});
 		setLists(updatedLists);
+	};
+	const onEditTask = (id, text) => {
+		const updatedTasks = tasks.map((task) => {
+			if (task.id === id) {
+				task.text = text;
+			}
+			return task;
+		});
+		setTasks(updatedTasks);
 	};
 
 	// const updateLists = (lists) => {
@@ -112,7 +129,10 @@ function App() {
 					list={activeItem}
 					lists={lists}
 					tasks={tasks}
+					colors={colors}
 					onEditTitle={onEditTitle}
+					onEditTask={onEditTask}
+					onRemove={onRemoveTask}
 					onAdd={onAddTask}
 				/>
 			)}

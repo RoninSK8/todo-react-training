@@ -23,8 +23,6 @@ function App() {
 			setColors(colorsResponse.val());
 			setLists(listsResponse.val());
 			console.log(lists);
-			// lists ? setActiveItem(lists[0]) : null;
-			// setActiveItem(lists[0]);
 			setLoading(false);
 			setActiveItem(listsResponse.val()[0]);
 		};
@@ -67,10 +65,11 @@ function App() {
 		});
 		setLists(updatedLists);
 	};
-	const onEditTask = (id, text) => {
+	const onEditTask = (id, updatedTask) => {
 		const updatedTasks = tasks.map((task) => {
 			if (task.id === id) {
-				task.text = text;
+				task.text = updatedTask.text;
+				task.completed = updatedTask.completed;
 			}
 			return task;
 		});

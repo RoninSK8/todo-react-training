@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getDatabase, ref, child, get } from 'firebase/database';
+import { getDatabase, ref, child, get, push, update } from 'firebase/database';
+import { nanoid } from 'nanoid';
 
 import List from './assets/components/List';
 import AddList from './assets/components/AddList';
@@ -37,48 +38,112 @@ function App() {
 		setActiveItem(updatedLists[updatedLists.length - 1]);
 	};
 
-	const onAddTask = (newTask) => {
-		let updatedTasks;
-		tasks ? (updatedTasks = [...tasks, newTask]) : (updatedTasks = [newTask]);
+	const onAddTask = (updatedTasks) => {
+		// let updatedTasks;
+		// tasks ? (updatedTasks = [...tasks, newTask]) : (updatedTasks = [newTask]);
 		setTasks(updatedTasks);
 	};
 
-	const onRemoveTask = (removedTask) => {
-		const updatedTasks = tasks.filter((task) => task.id !== removedTask.id);
-		setTasks(updatedTasks);
+	const onRemoveTask = (id) => {
+		const db = getDatabase();
+		let updatedData = tasks.filter((task) => task.id !== id);
+		if (updatedData.length === 0) {
+			updatedData = [{}];
+		}
+		const updates = {};
+		updates['/tasks/'] = updatedData;
+		update(ref(db), updates)
+			.then(() => setTasks(updatedData))
+			.catch((e) => console.log(e));
 	};
 
 	const onRemoveList = (removedList) => {
-		const updatedLists = lists.filter((list) => list.id !== removedList.id);
-		setLists(updatedLists);
-		if (lists) {
-			setActiveItem(updatedLists[0]);
+		const removeAssociatedTasks = (list, tasks) => {
+			const db = getDatabase();
+			let updatedData = tasks.filter((task) => task.listId !== list.id);
+			if (updatedData.length === 0) {
+				updatedData = [{}];
+			}
+			const updates = {};
+			updates['/tasks/'] = updatedData;
+			update(ref(db), updates).then(setTasks(updatedData));
+		};
+
+		if (
+			window.confirm(
+				`Вы действительно хотите удалить список задач ${removedList.name}?`
+			)
+		) {
+			const db = getDatabase();
+			let updatedData = lists.filter((list) => list.id !== removedList.id);
+			if (updatedData.length === 0) {
+				updatedData = [{}];
+			}
+			const updates = {};
+			updates['/lists/'] = updatedData;
+			update(ref(db), updates)
+				.then(() => {
+					setLists(updatedData);
+					if (lists) {
+						setActiveItem(updatedData[0]);
+					}
+				})
+				.then(() => removeAssociatedTasks(removedList, tasks))
+				.catch((e) => console.log(e));
 		}
 	};
 
-	const onEditTitle = (id, name) => {
-		const updatedLists = lists.map((list) => {
-			if (list.id === id) {
-				list.name = name;
-			}
-			return list;
-		});
-		setLists(updatedLists);
+	const onEditListTitle = (list) => {
+		const newTitle = window.prompt('Название списка', list.name);
+
+		if (newTitle) {
+			const currentListId = list.id;
+			const db = getDatabase();
+			const updatedData = lists.map((list) => {
+				if (list.id === currentListId) {
+					list.name = newTitle;
+				}
+				return list;
+			});
+			const updates = {};
+			updates['/lists/'] = updatedData;
+			update(ref(db), updates).then(setLists(updatedData));
+		}
 	};
-	const onEditTask = (id, updatedTask) => {
-		const updatedTasks = tasks.map((task) => {
+
+	const onEditTaskText = (id, text) => {
+		const newText = window.prompt('Название задачи', text);
+
+		if (newText) {
+			const db = getDatabase();
+			let updatedTask;
+			const updatedData = tasks.map((task) => {
+				if (task.id === id) {
+					task.text = newText;
+					updatedTask = task;
+				}
+				return task;
+			});
+			const updates = {};
+			updates['/tasks/'] = updatedData;
+			update(ref(db), updates).then(setTasks(updatedData));
+		}
+	};
+
+	const onToggleComplete = (id) => {
+		const db = getDatabase();
+		let updatedTask;
+		const updatedData = tasks.map((task) => {
 			if (task.id === id) {
-				task.text = updatedTask.text;
-				task.completed = updatedTask.completed;
+				task.completed = !task.completed;
+				updatedTask = task;
 			}
 			return task;
 		});
-		setTasks(updatedTasks);
+		const updates = {};
+		updates['/tasks/'] = updatedData;
+		update(ref(db), updates).then(setTasks(updatedData));
 	};
-
-	// const updateLists = (lists) => {
-	// 	setLists(lists);
-	// };
 
 	return (
 		<div className="todo">
@@ -126,13 +191,13 @@ function App() {
 			{lists && activeItem && (
 				<Tasks
 					list={activeItem}
-					lists={lists}
 					tasks={tasks}
 					colors={colors}
-					onEditTitle={onEditTitle}
-					onEditTask={onEditTask}
-					onRemove={onRemoveTask}
-					onAdd={onAddTask}
+					onEditListTitle={onEditListTitle}
+					onEditTaskText={onEditTaskText}
+					onRemoveTask={onRemoveTask}
+					onToggleComplete={onToggleComplete}
+					onAddTask={onAddTask}
 				/>
 			)}
 		</div>

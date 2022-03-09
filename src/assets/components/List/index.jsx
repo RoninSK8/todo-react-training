@@ -18,36 +18,6 @@ const List = ({
 	const tasksCount = (tasks, list) => {
 		return tasks ? tasks.filter((task) => task.listId === list.id).length : 0;
 	};
-	const removeAssociatedTasks = (list, tasks) => {
-		const db = getDatabase();
-		let updatedData = tasks.filter((task) => task.listId !== list.id);
-		if (updatedData.length === 0) {
-			updatedData = [{}];
-		}
-		const updates = {};
-		updates['/tasks/'] = updatedData;
-		update(ref(db), updates);
-	};
-	const onRemoveList = (list) => {
-		if (
-			window.confirm(
-				`Вы действительно хотите удалить список задач ${list.name}?`
-			)
-		) {
-			const db = getDatabase();
-			// lists ? (updatedData = [...lists, listData]) : (updatedData = [listData]);
-			let updatedData = items.filter((item) => item.id !== list.id);
-			if (updatedData.length === 0) {
-				updatedData = [{}];
-			}
-			const updates = {};
-			updates['/lists/'] = updatedData;
-			update(ref(db), updates)
-				.then(() => onRemove(list))
-				.then(() => removeAssociatedTasks(list, tasks))
-				.catch((e) => console.log(e));
-		}
-	};
 
 	return (
 		<ul className="list" onClick={onClick}>
@@ -78,7 +48,7 @@ const List = ({
 					{isRemovable && (
 						<svg
 							className="list__remove-icon"
-							onClick={() => onRemoveList(item)}
+							onClick={() => onRemove(item)}
 							width="11"
 							height="11"
 							viewBox="0 0 11 11"

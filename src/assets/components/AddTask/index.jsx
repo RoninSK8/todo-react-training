@@ -5,7 +5,7 @@ import { getDatabase, ref, child, get, push, update } from 'firebase/database';
 import addSvg from '../../img/add.svg';
 import './AddTask.scss';
 
-const AddTask = ({ list, tasks, onAdd }) => {
+const AddTask = ({ list, tasks, onAddTask }) => {
 	const [inputValue, setInputValue] = useState('');
 	const [isFormActive, setFormActive] = useState(false);
 
@@ -14,9 +14,9 @@ const AddTask = ({ list, tasks, onAdd }) => {
 		setInputValue('');
 	};
 
-	const addTask = () => {
+	const handleAddTask = () => {
 		if (!inputValue) {
-			alert('Введите название списка');
+			alert('Введите название задачи');
 			return;
 		}
 		const db = getDatabase();
@@ -26,6 +26,7 @@ const AddTask = ({ list, tasks, onAdd }) => {
 			text: inputValue,
 			listId: list.id,
 		};
+		console.log(tasks);
 		let updatedData;
 		tasks ? (updatedData = [...tasks, taskData]) : (updatedData = [taskData]);
 
@@ -34,7 +35,7 @@ const AddTask = ({ list, tasks, onAdd }) => {
 		setFormActive(false);
 		setInputValue('');
 		update(ref(db), updates)
-			.then(onAdd(taskData))
+			.then(onAddTask(updatedData))
 			.catch(console.log('не удалось добавить данные на сервер'));
 	};
 
@@ -54,7 +55,10 @@ const AddTask = ({ list, tasks, onAdd }) => {
 						type="text"
 						placeholder="Название задачи"
 					/>
-					<button onClick={addTask} className="add-task__confirm-button button">
+					<button
+						onClick={handleAddTask}
+						className="add-task__confirm-button button"
+					>
 						Добавить задачу
 					</button>
 					<button

@@ -46,7 +46,7 @@ export default function Task({
 			/>
 			<svg
 				className="list__remove-icon"
-				onClick={() => onRemoveTask(task)}
+				onClick={() => onRemoveTask(id)}
 				width="11"
 				height="11"
 				viewBox="0 0 11 11"

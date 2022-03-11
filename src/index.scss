@@ -21,20 +21,17 @@
 	border: 1px solid #f1f1f1;
 	font-size: 14px;
 
+	&__tasks {
+		flex: 1;
+		padding: 60px;
+		overflow: auto;
+	}
+
 	.sidebar {
 		background-color: #e5e5e5;
 		width: 200px;
 		height: calc(100% - 120px);
 		padding: 60px 20px;
-
-		&__tasks {
-			flex: 1;
-			padding: 60px;
-			overflow: auto;
-		}
-
-		&__show-all {
-		}
 	}
 }
 

@@ -29,6 +29,7 @@ const Tasks = ({
 			>
 				{list.name}
 				<img
+					className="icon"
 					onClick={() => onEditListTitle(list)}
 					src={editSvg}
 					alt="Edit icon"

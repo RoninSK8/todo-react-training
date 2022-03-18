@@ -1,15 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { getDatabase, ref, child, get, push, update } from 'firebase/database';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import {
+	getDatabase,
+	ref,
+	set,
+	child,
+	get,
+	push,
+	update,
+} from 'firebase/database';
 import { nanoid } from 'nanoid';
 import classNames from 'classnames';
+import { Context } from '../../../index';
 import closeSvg from '../../img/close.svg';
 import List from '../List';
 import './AddList.scss';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const AddList = ({ lists, colors, onAdd }) => {
 	const [isPopupActive, setPopupActive] = useState(false);
 	const [selectedColor, selectColor] = useState(1);
 	const [inputValue, setInputValue] = useState('');
+
+	const { auth } = useContext(Context);
+	const [user, loading, error] = useAuthState(auth);
 
 	useEffect(() => {
 		if (Array.isArray(colors)) {
@@ -35,15 +49,18 @@ const AddList = ({ lists, colors, onAdd }) => {
 			id: nanoid(5),
 			name: inputValue,
 			colorId: selectedColor,
+			userId: user.uid,
 		};
+
 		let updatedData;
 		lists ? (updatedData = [...lists, listData]) : (updatedData = [listData]);
-
 		const updates = {};
 		updates['/lists/'] = updatedData;
+
 		setPopupActive(false);
 		selectColor(1);
 		setInputValue('');
+
 		update(ref(db), updates)
 			.then(onAdd(listData))
 			.catch(console.log('не удалось добавить данные на сервер'));

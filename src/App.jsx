@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { getDatabase, ref, child, get, push, update } from 'firebase/database';
-import { nanoid } from 'nanoid';
+import { Routes, Route, Link } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
+import { Context } from './index';
 import List from './assets/components/List';
 import AddList from './assets/components/AddList';
 import Tasks from './assets/components/Tasks';
+import UserPanel from './assets/components/Authentication/UserPanel';
 
 function App() {
 	const [lists, setLists] = useState(null);
+	const [currentUserLists, setCurrentUserLists] = useState(null);
 	const [colors, setColors] = useState(null);
 	const [tasks, setTasks] = useState(null);
 	const [activeItem, setActiveItem] = useState(null);
 	const [isLoading, setLoading] = useState(false);
 
+	const { auth } = useContext(Context);
+	const [user, loading, error] = useAuthState(auth);
+
+	// if (user) {}
 	useEffect(() => {
 		const dbRef = ref(getDatabase());
 		const getData = async () => {
@@ -20,10 +29,13 @@ function App() {
 			const listsResponse = await get(child(dbRef, 'lists'));
 			const colorsResponse = await get(child(dbRef, 'colors'));
 			const tasksResponse = await get(child(dbRef, 'tasks'));
-			setTasks(tasksResponse.val());
 			setColors(colorsResponse.val());
 			setLists(listsResponse.val());
-			console.log(lists);
+			setTasks(tasksResponse.val());
+
+			setCurrentUserLists(
+				listsResponse.val().filter((list) => list.userId === user.uid)
+			);
 			setLoading(false);
 			setActiveItem(listsResponse.val()[0]);
 		};
@@ -39,8 +51,6 @@ function App() {
 	};
 
 	const onAddTask = (updatedTasks) => {
-		// let updatedTasks;
-		// tasks ? (updatedTasks = [...tasks, newTask]) : (updatedTasks = [newTask]);
 		setTasks(updatedTasks);
 	};
 
@@ -147,6 +157,7 @@ function App() {
 
 	return (
 		<div className="todo">
+			<UserPanel />
 			<div className="sidebar">
 				<List
 					items={[
@@ -173,7 +184,7 @@ function App() {
 					'Загрузка...'
 				) : lists ? (
 					<List
-						items={lists}
+						items={currentUserLists}
 						tasks={tasks}
 						colors={colors}
 						onRemove={onRemoveList}
@@ -188,7 +199,49 @@ function App() {
 				)}
 				<AddList colors={colors} lists={lists} onAdd={onAddList} />
 			</div>
-			{lists && activeItem && (
+			<div className="todo__tasks">
+				<Routes>
+					<Route
+						exact
+						path="/"
+						element={
+							currentUserLists &&
+							currentUserLists.map((list) => (
+								<Tasks
+									key={list.id}
+									list={list}
+									tasks={tasks}
+									colors={colors}
+									onEditListTitle={onEditListTitle}
+									onEditTaskText={onEditTaskText}
+									onRemoveTask={onRemoveTask}
+									onToggleComplete={onToggleComplete}
+									onAddTask={onAddTask}
+								/>
+							))
+						}
+					></Route>
+					<Route
+						path="/lists/:id"
+						element={
+							lists &&
+							activeItem && (
+								<Tasks
+									list={activeItem}
+									tasks={tasks}
+									colors={colors}
+									onEditListTitle={onEditListTitle}
+									onEditTaskText={onEditTaskText}
+									onRemoveTask={onRemoveTask}
+									onToggleComplete={onToggleComplete}
+									onAddTask={onAddTask}
+								/>
+							)
+						}
+					></Route>
+				</Routes>
+			</div>
+			{/* {lists && activeItem && (
 				<Tasks
 					list={activeItem}
 					tasks={tasks}
@@ -199,7 +252,7 @@ function App() {
 					onToggleComplete={onToggleComplete}
 					onAddTask={onAddTask}
 				/>
-			)}
+			)} */}
 		</div>
 	);
 }

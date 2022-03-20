@@ -47,6 +47,9 @@ function App() {
 		let updatedLists;
 		lists ? (updatedLists = [...lists, newList]) : (updatedLists = [newList]);
 		setLists(updatedLists);
+		setCurrentUserLists(
+			updatedLists.filter((list) => list.userId === user.uid)
+		);
 		setActiveItem(updatedLists[updatedLists.length - 1]);
 	};
 
@@ -94,6 +97,9 @@ function App() {
 			update(ref(db), updates)
 				.then(() => {
 					setLists(updatedData);
+					setCurrentUserLists(
+						updatedData.filter((list) => list.userId === user.uid)
+					);
 					if (lists) {
 						setActiveItem(updatedData[0]);
 					}
@@ -117,7 +123,13 @@ function App() {
 			});
 			const updates = {};
 			updates['/lists/'] = updatedData;
-			update(ref(db), updates).then(setLists(updatedData));
+			update(ref(db), updates).then(
+				setLists(updatedData).then(
+					setCurrentUserLists(
+						updatedData.filter((list) => list.userId === user.uid)
+					)
+				)
+			);
 		}
 	};
 

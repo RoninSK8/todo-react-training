@@ -47,16 +47,20 @@ const AddTask = ({ list, tasks, onAddTask }) => {
 					<span>Новая задача</span>
 				</div>
 			) : (
-				<div className="add-task__form">
-					<input
-						value={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
-						className="add-task__input field"
-						type="text"
-						placeholder="Название задачи"
-					/>
+				<form onSubmit={handleAddTask} className="add-task__form">
+					<label>
+						<input
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							className="add-task__input field"
+							type="text"
+							name="taskName"
+							placeholder="Название задачи"
+						/>
+					</label>
 					<button
-						onClick={handleAddTask}
+						type="submit"
+						// onClick={handleAddTask}
 						className="add-task__confirm-button button"
 					>
 						Добавить задачу
@@ -67,7 +71,7 @@ const AddTask = ({ list, tasks, onAddTask }) => {
 					>
 						Отмена
 					</button>
-				</div>
+				</form>
 			)}
 		</div>
 	);

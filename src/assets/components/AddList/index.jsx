@@ -108,32 +108,34 @@ const AddList = ({ lists, colors, onAdd }) => {
 						src={closeSvg}
 						alt="Close button"
 					/>
-					<input
-						value={inputValue}
-						onChange={(e) => setInputValue(e.target.value)}
-						className="field"
-						type="text"
-						placeholder="Название списка"
-					/>
-					<div className="add-list__colors">
-						{colors &&
-							colors.map((color) => (
-								<i
-									className={classNames(
-										'badge',
-										selectedColor === color.id && 'active'
-									)}
-									onClick={() => onClickBadge(color.id)}
-									key={color.id}
-									style={{
-										background: color.hex,
-									}}
-								></i>
-							))}
-					</div>
-					<button onClick={addList} className="button">
-						Добавить
-					</button>
+					<form action="" onSubmit={addList}>
+						<input
+							value={inputValue}
+							onChange={(e) => setInputValue(e.target.value)}
+							className="field"
+							type="text"
+							placeholder="Название списка"
+						/>
+						<div className="add-list__colors">
+							{colors &&
+								colors.map((color) => (
+									<i
+										className={classNames(
+											'badge',
+											selectedColor === color.id && 'active'
+										)}
+										onClick={() => onClickBadge(color.id)}
+										key={color.id}
+										style={{
+											background: color.hex,
+										}}
+									></i>
+								))}
+						</div>
+						<button type="submit" className="button">
+							Добавить
+						</button>
+					</form>
 				</div>
 			)}
 		</div>

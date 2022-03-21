@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { getDatabase, ref, child, get, push, update } from 'firebase/database';
-import { Routes, Route, Link } from 'react-router-dom';
+import {
+	Routes,
+	Route,
+	Link,
+	useNavigate,
+	useLocation,
+} from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { Context } from './index';
@@ -17,6 +23,7 @@ function App() {
 	const [tasks, setTasks] = useState(null);
 	const [activeItem, setActiveItem] = useState(null);
 	const [isLoading, setLoading] = useState(false);
+	let location = useLocation();
 
 	const { auth } = useContext(Context);
 	const [user, loading, error] = useAuthState(auth);
@@ -167,13 +174,17 @@ function App() {
 		update(ref(db), updates).then(setTasks(updatedData));
 	};
 
+	const navigate = useNavigate();
+
 	return (
 		<div className="todo">
 			<UserPanel />
 			<div className="sidebar">
 				<List
+					onClickItem={() => navigate('/')}
 					items={[
 						{
+							active: location.pathname === '/',
 							icon: (
 								<svg
 									width="14"
@@ -202,6 +213,7 @@ function App() {
 						onRemove={onRemoveList}
 						onClickItem={(item) => {
 							setActiveItem(item);
+							navigate(`/lists/${item.id}`);
 						}}
 						activeItem={activeItem}
 						isRemovable
@@ -214,7 +226,6 @@ function App() {
 			<div className="todo__tasks">
 				<Routes>
 					<Route
-						exact
 						path="/"
 						element={
 							currentUserLists &&
@@ -234,12 +245,11 @@ function App() {
 						}
 					></Route>
 					<Route
-						path="/lists/:id"
+						path="/lists/:listId"
 						element={
-							lists &&
-							activeItem && (
+							currentUserLists && (
 								<Tasks
-									list={activeItem}
+									lists={currentUserLists}
 									tasks={tasks}
 									colors={colors}
 									onEditListTitle={onEditListTitle}

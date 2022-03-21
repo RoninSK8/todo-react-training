@@ -4,6 +4,7 @@ import closeSvg from '../../img/close.svg';
 import { getDatabase, ref, child, get, push, update } from 'firebase/database';
 
 import './List.scss';
+import { Link, useNavigate } from 'react-router-dom';
 
 const List = ({
 	items,
@@ -23,10 +24,12 @@ const List = ({
 		<ul className="list" onClick={onClick}>
 			{items.map((item, index) => (
 				<li
-					onClick={onClickItem ? () => onClickItem(item) : null}
 					key={index}
+					onClick={onClickItem ? () => onClickItem(item) : null}
 					className={classNames({
-						active: activeItem && activeItem.id === item.id,
+						active: item.active
+							? item.active
+							: activeItem && activeItem.id === item.id,
 					})}
 				>
 					{item.icon ? (
@@ -40,10 +43,7 @@ const List = ({
 							}}
 						></i>
 					)}
-					<span>
-						{/* {`${item.name} (${tasksCount(tasks, item)})`} */}
-						{item.name}
-					</span>
+					<span>{item.name}</span>
 					{tasks && <p>{`(${tasksCount(tasks, item)})`}</p>}
 					{isRemovable && (
 						<svg

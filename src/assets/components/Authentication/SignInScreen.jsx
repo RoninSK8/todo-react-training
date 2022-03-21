@@ -66,7 +66,7 @@ const SignInScreen = () => {
 		return authObserver;
 	});
 
-	console.log('user', user);
+	// console.log('user', user);
 
 	if (user) {
 		return <App />;

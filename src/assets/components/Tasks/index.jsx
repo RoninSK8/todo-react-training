@@ -4,9 +4,11 @@ import './Tasks.scss';
 import Task from './Task';
 import editSvg from '../../img/edit.svg';
 import AddTask from '../AddTask';
+import { useParams } from 'react-router-dom';
 
 const Tasks = ({
 	list,
+	lists,
 	colors,
 	tasks,
 	onEditListTitle,
@@ -15,22 +17,36 @@ const Tasks = ({
 	onRemoveTask,
 	onToggleComplete,
 }) => {
+	const { listId } = useParams();
+
+	let currentList;
+	list
+		? (currentList = list)
+		: (currentList = lists.filter((list) => list.id === listId)[0]);
+
 	const currentTasks = tasks
-		? tasks.filter((task) => task.listId === list.id)
+		? tasks.filter((task) => task.listId === currentList.id)
 		: [];
+	// console.log('lists', lists);
+	// console.log('colors', colors);
+	// console.log('currentList', currentList);
+	// console.log('listId', listId);
+	// console.log('currentList.colorId', currentList.colorId);
+	// const colorX = colors.find((color) => color.id === currentList.colorId);
+	// console.log('color', colorX);
 
 	return (
 		<div className="tasks">
 			<h2
 				style={{
-					color: colors.find((color) => color.id === list.colorId).hex,
+					color: colors.find((color) => color.id === currentList.colorId).hex,
 				}}
 				className="tasks__title"
 			>
-				{list.name}
+				{currentList.name}
 				<img
 					className="icon"
-					onClick={() => onEditListTitle(list)}
+					onClick={() => onEditListTitle(currentList)}
 					src={editSvg}
 					alt="Edit icon"
 				/>
@@ -40,7 +56,7 @@ const Tasks = ({
 				{currentTasks.map((task) => (
 					<Task
 						key={task.id}
-						list={list}
+						list={currentList}
 						onRemoveTask={onRemoveTask}
 						onEditTaskText={onEditTaskText}
 						onToggleComplete={onToggleComplete}
@@ -48,7 +64,7 @@ const Tasks = ({
 					/>
 				))}
 			</div>
-			<AddTask onAddTask={onAddTask} list={list} tasks={tasks} />
+			<AddTask onAddTask={onAddTask} list={currentList} tasks={tasks} />
 		</div>
 	);
 };

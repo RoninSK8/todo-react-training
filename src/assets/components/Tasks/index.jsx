@@ -64,7 +64,12 @@ const Tasks = ({
 					/>
 				))}
 			</div>
-			<AddTask onAddTask={onAddTask} list={currentList} tasks={tasks} />
+			<AddTask
+				key={currentList.id}
+				onAddTask={onAddTask}
+				list={currentList}
+				tasks={tasks}
+			/>
 		</div>
 	);
 };

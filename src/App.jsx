@@ -28,7 +28,6 @@ function App() {
 	const { auth } = useContext(Context);
 	const [user, loading, error] = useAuthState(auth);
 
-	// if (user) {}
 	useEffect(() => {
 		const dbRef = ref(getDatabase());
 		const getData = async () => {
@@ -44,11 +43,18 @@ function App() {
 				listsResponse.val().filter((list) => list.userId === user.uid)
 			);
 			setLoading(false);
-			setActiveItem(listsResponse.val()[0]);
 		};
 
 		getData();
 	}, []);
+
+	useEffect(() => {
+		const listId = location.pathname.split('lists/')[1];
+		if (lists) {
+			const list = lists.find((list) => list.id === listId);
+			setActiveItem(list);
+		}
+	}, [lists, location.pathname]);
 
 	const onAddList = (newList) => {
 		let updatedLists;
@@ -57,7 +63,7 @@ function App() {
 		setCurrentUserLists(
 			updatedLists.filter((list) => list.userId === user.uid)
 		);
-		setActiveItem(updatedLists[updatedLists.length - 1]);
+		navigate(`/lists/${newList.id}`);
 	};
 
 	const onAddTask = (updatedTasks) => {
@@ -130,13 +136,12 @@ function App() {
 			});
 			const updates = {};
 			updates['/lists/'] = updatedData;
-			update(ref(db), updates).then(
-				setLists(updatedData).then(
-					setCurrentUserLists(
-						updatedData.filter((list) => list.userId === user.uid)
-					)
-				)
-			);
+			update(ref(db), updates).then(() => {
+				setLists(updatedData);
+				setCurrentUserLists(
+					updatedData.filter((list) => list.userId === user.uid)
+				);
+			});
 		}
 	};
 

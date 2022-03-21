@@ -9,13 +9,6 @@ var uiConfig = {
 	signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
 	callbacks: {
 		signInSuccessWithAuthResult: async (authResult) => {
-			const db = getDatabase();
-			const userRef = ref(db, 'users');
-			const newUserRef = push(userRef);
-			set(newUserRef, {
-				id: user.uid,
-			});
-
 			const userInfo = authResult.additionalUserInfo;
 			if (userInfo.isNewUser && userInfo.providerId === 'password') {
 				try {
@@ -43,42 +36,24 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const signOut = () => {
-	firebase
-		.auth()
-		.signOut()
-		.then(function () {
-			console.log('Successufully Signed out');
-		})
-		.catch(function () {
-			console.log('Error Signed out');
-		});
-};
-
 const SignInScreen = () => {
 	const [user, setUser] = useState(null);
 
 	useEffect(() => {
-		const user = firebase.auth().currentUser;
+		// const user = firebase.auth().currentUser;
 		const authObserver = firebase.auth().onAuthStateChanged((user) => {
 			setUser(user);
 		});
 		return authObserver;
-	});
+	}, [user]);
 
-	// console.log('user', user);
+	console.log('user', user);
 
 	if (user) {
 		return <App />;
 	} else {
 		return (
-			<>
-				<div>Sign up / Register</div>
-				<StyledFirebaseAuth
-					uiConfig={uiConfig}
-					firebaseAuth={firebase.auth()}
-				/>
-			</>
+			<StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
 		);
 	}
 };

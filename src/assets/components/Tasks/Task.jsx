@@ -39,7 +39,7 @@ export default function Task({
 					</svg>
 				</label>
 			</div>
-			<p>{text}</p>
+			<p style={{ textDecoration: completed && 'line-through' }}>{text}</p>
 			<div className="actions">
 				<img
 					className="icon"

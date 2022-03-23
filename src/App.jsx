@@ -183,8 +183,8 @@ function App() {
 
 	return (
 		<div className="todo">
-			<UserPanel />
 			<div className="sidebar">
+				<UserPanel />
 				<List
 					onClickItem={() => navigate('/')}
 					items={[

@@ -119,6 +119,7 @@ function App() {
 				})
 				.then(() => removeAssociatedTasks(removedList, tasks))
 				.catch((e) => console.log(e));
+			navigate(`/`);
 		}
 	};
 

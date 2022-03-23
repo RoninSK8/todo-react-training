@@ -18,12 +18,20 @@ const Tasks = ({
 	onToggleComplete,
 }) => {
 	const { listId } = useParams();
+	const params = useParams();
+	// console.log('params', params);
+	// console.log('listId', listId);
 
 	let currentList;
 	list
 		? (currentList = list)
 		: (currentList = lists.filter((list) => list.id === listId)[0]);
 
+	// console.log('list', list);
+	// console.log('lists', lists);
+	// console.log('listId', listId);
+
+	console.log('currentList', currentList);
 	const currentTasks = tasks
 		? tasks.filter((task) => task.listId === currentList.id)
 		: [];

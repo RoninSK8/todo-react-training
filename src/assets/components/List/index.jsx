@@ -48,7 +48,11 @@ const List = ({
 					{isRemovable && (
 						<svg
 							className="list__remove-icon"
-							onClick={() => onRemove(item)}
+							onClick={(e) => {
+								e.stopPropagation();
+								onRemove(item);
+							}}
+							// onClick={() => onRemove(item)}
 							width="11"
 							height="11"
 							viewBox="0 0 11 11"

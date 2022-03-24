@@ -234,20 +234,25 @@ function App() {
 					<Route
 						path="/"
 						element={
-							currentUserLists &&
-							currentUserLists.map((list) => (
-								<Tasks
-									key={list.id}
-									list={list}
-									tasks={tasks}
-									colors={colors}
-									onEditListTitle={onEditListTitle}
-									onEditTaskText={onEditTaskText}
-									onRemoveTask={onRemoveTask}
-									onToggleComplete={onToggleComplete}
-									onAddTask={onAddTask}
-								/>
-							))
+							currentUserLists?.length > 0 ? (
+								currentUserLists.map((list) => (
+									<Tasks
+										key={list.id}
+										list={list}
+										tasks={tasks}
+										colors={colors}
+										onEditListTitle={onEditListTitle}
+										onEditTaskText={onEditTaskText}
+										onRemoveTask={onRemoveTask}
+										onToggleComplete={onToggleComplete}
+										onAddTask={onAddTask}
+									/>
+								))
+							) : (
+								<div className="tasks__items">
+									<h2>Списки задач отсутствуют</h2>
+								</div>
+							)
 						}
 					></Route>
 					<Route

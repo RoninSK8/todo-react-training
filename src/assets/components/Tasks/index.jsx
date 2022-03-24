@@ -27,7 +27,7 @@ const Tasks = ({
 		? (currentList = list)
 		: (currentList = lists.filter((list) => list.id === listId)[0]);
 
-	// console.log('list', list);
+	console.log('list', list);
 	// console.log('lists', lists);
 	// console.log('listId', listId);
 

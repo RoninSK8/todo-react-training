@@ -100,13 +100,15 @@
 			}
 		}
 
-		label:hover {
-			background-color: #e8e8e8;
-			border-color: #e8e8e8;
-			svg {
-				opacity: 1;
-				path {
-					stroke: #b2b2b2;
+		@media (hover: hover) and (pointer: fine) {
+			label:hover {
+				background-color: #e8e8e8;
+				border-color: #e8e8e8;
+				svg {
+					opacity: 1;
+					path {
+						stroke: #b2b2b2;
+					}
 				}
 			}
 		}

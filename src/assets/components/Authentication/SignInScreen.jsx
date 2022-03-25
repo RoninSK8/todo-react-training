@@ -2,25 +2,26 @@ import React, { useState, useEffect } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
+
 import App from '../../../App';
 
 var uiConfig = {
 	signInFlow: 'popup',
 	signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
-	callbacks: {
-		signInSuccessWithAuthResult: async (authResult) => {
-			const userInfo = authResult.additionalUserInfo;
-			if (userInfo.isNewUser && userInfo.providerId === 'password') {
-				try {
-					await authResult.user.sendEmailVerification();
-					console.log('Check your email.');
-				} catch (e) {
-					console.log(e);
-				}
-			}
-			return false;
-		},
-	},
+	// callbacks: {
+	// 	signInSuccessWithAuthResult: async (authResult) => {
+	// 		const userInfo = authResult.additionalUserInfo;
+	// 		if (userInfo.isNewUser && userInfo.providerId === 'password') {
+	// 			try {
+	// 				await authResult.user.sendEmailVerification();
+	// 				console.log('Check your email.');
+	// 			} catch (e) {
+	// 				console.log(e);
+	// 			}
+	// 		}
+	// 		return false;
+	// 	},
+	// },
 };
 
 const firebaseConfig = {
@@ -40,14 +41,11 @@ const SignInScreen = () => {
 	const [user, setUser] = useState(null);
 
 	useEffect(() => {
-		// const user = firebase.auth().currentUser;
 		const authObserver = firebase.auth().onAuthStateChanged((user) => {
 			setUser(user);
 		});
 		return authObserver;
 	}, [user]);
-
-	console.log('user', user);
 
 	if (user) {
 		return <App />;

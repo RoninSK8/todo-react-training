@@ -1,10 +1,10 @@
 import React from 'react';
-import { getDatabase, ref, child, get, push, update } from 'firebase/database';
-import './Tasks.scss';
-import Task from './Task';
-import editSvg from '../../img/edit.svg';
-import AddTask from '../AddTask';
 import { useParams } from 'react-router-dom';
+
+import AddTask from '../AddTask';
+import Task from './Task';
+import './Tasks.scss';
+import editSvg from '../../img/edit.svg';
 
 const Tasks = ({
 	list,
@@ -18,30 +18,15 @@ const Tasks = ({
 	onToggleComplete,
 }) => {
 	const { listId } = useParams();
-	const params = useParams();
-	// console.log('params', params);
-	// console.log('listId', listId);
 
 	let currentList;
 	list
 		? (currentList = list)
 		: (currentList = lists.filter((list) => list.id === listId)[0]);
 
-	console.log('list', list);
-	// console.log('lists', lists);
-	// console.log('listId', listId);
-
-	console.log('currentList', currentList);
 	const currentTasks = tasks
 		? tasks.filter((task) => task.listId === currentList.id)
 		: [];
-	// console.log('lists', lists);
-	// console.log('colors', colors);
-	// console.log('currentList', currentList);
-	// console.log('listId', listId);
-	// console.log('currentList.colorId', currentList.colorId);
-	// const colorX = colors.find((color) => color.id === currentList.colorId);
-	// console.log('color', colorX);
 
 	return (
 		<div className="tasks">

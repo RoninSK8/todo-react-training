@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import { getDatabase, ref, child, get, push, update } from 'firebase/database';
-import {
-	Routes,
-	Route,
-	Link,
-	useNavigate,
-	useLocation,
-} from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { Context } from './index';
@@ -274,18 +267,6 @@ function App() {
 					></Route>
 				</Routes>
 			</div>
-			{/* {lists && activeItem && (
-				<Tasks
-					list={activeItem}
-					tasks={tasks}
-					colors={colors}
-					onEditListTitle={onEditListTitle}
-					onEditTaskText={onEditTaskText}
-					onRemoveTask={onRemoveTask}
-					onToggleComplete={onToggleComplete}
-					onAddTask={onAddTask}
-				/>
-			)} */}
 		</div>
 	);
 }

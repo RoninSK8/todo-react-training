@@ -1,10 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import closeSvg from '../../img/close.svg';
-import { getDatabase, ref, child, get, push, update } from 'firebase/database';
 
 import './List.scss';
-import { Link, useNavigate } from 'react-router-dom';
 
 const List = ({
 	items,
@@ -52,7 +49,6 @@ const List = ({
 								e.stopPropagation();
 								onRemove(item);
 							}}
-							// onClick={() => onRemove(item)}
 							width="11"
 							height="11"
 							viewBox="0 0 11 11"
